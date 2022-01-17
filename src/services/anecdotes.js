@@ -1,7 +1,9 @@
 import axios from 'axios'
 
-const port = process.env.PORT | 3000
-const baseUrl = `http://localhost:${port}/api/anecdotes`
+const devBase = 'http://localhost:3000/api/anecdotes'
+const prodBase = `https://fs11-anecdotes.herokuapp.com/api/anecdotes`
+
+const baseUrl = (process.env.NODE_ENV ? prodBase : devBase)
 
 const getAll = async () => {
     const response = await axios.get(baseUrl)
