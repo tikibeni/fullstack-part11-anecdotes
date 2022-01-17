@@ -1,10 +1,14 @@
 # Fullstack CI/CD final exercise
 
-The final boss of the CI/CD-part of the UniHel-course CSM14112, meaning exercises 21-22.
+The final boss of the UniHel-course CSM14112: exercises 21-22.
+
+Deployed in [Heroku](https://fs11-anecdotes.herokuapp.com/).
 
 The application is extracted from [here](https://github.com/tikibeni/fullstack/tree/master/osa6/redux-anecdotes).
 
 This version pushes the anecdote-app into Heroku and utilizes CI/CD.
+
+Other pt11 exercises [here](https://github.com/tikibeni/fullstack-part11).
 
 ## Install
 
