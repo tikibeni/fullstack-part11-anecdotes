@@ -1,6 +1,6 @@
 # Fullstack CI/CD final exercise
 
-The final boss of the CI/CD-part of the UniHel-course CSM14112, meaning exercises 21-22.
+The final boss of the CI/CD-part of the UniHel-course CSM14112: exercises 21-22.
 
 The application is extracted from [here](https://github.com/tikibeni/fullstack/tree/master/osa6/redux-anecdotes).
 
