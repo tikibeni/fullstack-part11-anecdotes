@@ -1,0 +1,61 @@
+name: deployment pipeline
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+jobs:
+  pipeline:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: npm install
+        run: npm install
+
+      - name: build
+        run: npm run build
+
+      - name: heroku deployment
+        if: ${{ github.event_name == 'push' }} && ${{ contains(github.event.head_commit.message, '#skip') == false }}
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "fs11-anecdotes"
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          healthcheck: "https://fs11-anecdotes.herokuapp.com/health"
+          checkstring: "ok"
+          rollbackonhealthcheckfailed: true
+
+      - uses: actions/checkout@v2
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }} && ${{ contains(github.event.head_commit.message, '#skip') == false }}
+        uses: anothrNick/github-tag-action@1.33.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+
+      - name: deployment notification - success
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO_ME }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            New successful commit detected: ${{ github.event.commits[0].message }}
+            Repository: ${{ github.repository }}
+        if: success()
+
+      - name: deployment notification - failure
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO_ME }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            New failed commit detected: ${{ github.event.commits[0].message }}
+            Repository: ${{ github.repository }}
+        if: failure()
